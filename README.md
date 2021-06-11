@@ -36,3 +36,36 @@ https://blog.csdn.net/qq_41686130/article/details/81229353
     第二次膨脹
     '''
     dilation2 = cv2.dilate(erosion, dilatesize,iterations=3)
+
+第十二張照片引數：
+
+![image](https://user-images.githubusercontent.com/31395513/121690421-67f8f080-caf8-11eb-9065-db70a371262d.png)
+
+    k = 3
+    '''
+    以下開始，直到第二次 dilate 膨脹，是型態學處理
+    '''
+    gaussian = cv2.GaussianBlur(gray, (k,k), 0, 0, cv2.BORDER_DEFAULT)
+    median = cv2.medianBlur(gaussian, 5)
+    sobel = cv2.Sobel(median, cv2.CV_8U, 1, 0,ksize=3)
+    ret, binary = cv2.threshold(sobel,170,255,cv2.THRESH_BINARY)
+    '''
+    膨脹 size
+    '''
+    dilatesize = cv2.getStructuringElement(cv2.MORPH_RECT, (9,7))
+    '''
+    侵蝕 size
+    '''
+    erodesize = cv2.getStructuringElement(cv2.MORPH_RECT, (9,1))
+    '''
+    第一次膨脹
+    '''
+    dilation = cv2.dilate(binary, dilatesize,iterations=1)
+    '''
+    第一次侵蝕
+    '''
+    erosion = cv2.erode(dilation, erodesize,iterations=1)
+    '''
+    第二次膨脹
+    '''
+    dilation2 = cv2.dilate(erosion, dilatesize,iterations=3)
